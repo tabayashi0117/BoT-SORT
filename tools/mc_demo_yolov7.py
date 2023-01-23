@@ -2,6 +2,7 @@ import argparse
 import time
 from pathlib import Path
 import os, sys
+import pandas
 
 import cv2
 import torch
@@ -88,6 +89,11 @@ def detect(save_img=False):
     if device.type != 'cpu':
         model(torch.zeros(1, 3, imgsz, imgsz).to(device).type_as(next(model.parameters())))  # run once
     t0 = time.time()
+
+    # 物体の情報を保存するためのdataframeを作成
+    df_obj = pd.DataFrame(columns=['img_num', 'tracking_id', 'obj_type'])
+
+
     for img_num, (path, img, im0s, vid_cap) in enumerate(dataset):
         img = torch.from_numpy(img).to(device)
         img = img.half() if half else img.float()  # uint8 to fp16/32
@@ -165,7 +171,10 @@ def detect(save_img=False):
                                 y2 = int(tlbr[3])
                                 print(label)
                                 print(tlbr)
-                                cv2.imwrite(f'{save_dir_name}/img_{img_num}_{label}_{tlbr}.jpg', im0[y:y2, x:x2])
+                                cv2.imwrite(f'{save_dir_name}/img_{img_num}_object_{tid}_{names[int(tcls)]}.jpg', im0[y:y2, x:x2])
+                                
+                                # 物体の情報を保存
+                                df_obj = df_obj.append({'img_num': img_num, 'tracking_id': tid, 'obj_type': names[int(tcls)]}, ignore_index=True)
                             except:
                                 pass
 
@@ -203,6 +212,9 @@ def detect(save_img=False):
     if save_txt or save_img:
         s = f"\n{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
         # print(f"Results saved to {save_dir}{s}")
+    
+    # 物体の情報を保存
+    df_obj.to_csv("obj_info.csv")
 
     print(f'Done. ({time.time() - t0:.3f}s)')
 
