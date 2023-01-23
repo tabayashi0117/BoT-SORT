@@ -153,14 +153,13 @@ def detect(save_img=False):
                             label = f'{tid}, {names[int(tcls)]}'
                         plot_one_box(tlbr, im0, label=label, color=colors[int(tid) % len(colors)], line_thickness=2)
                         # 四角形内の画像を保存
-                        os.makedirs("output_img", exist_ok=True)
-                        x = tlbr
-                        c1, c2 = (int(x[0]), int(x[1])), (int(x[2]), int(x[3]))
+                        save_dir_name = "output_img"
+                        os.makedirs(save_dir_name, exist_ok=True)
                         x = int(tlbr[0])
                         y = int(tlbr[1])
                         w = int(tlbr[2])
                         h = int(tlbr[3])
-                        cv2.imwrite(f'{label}.jpg', im0[y:y+h, x:x+w])
+                        cv2.imwrite(f'{save_dir_name}/{label}.jpg', im0[y:y+h, x:x+w])
 
 
             p = Path(p)  # to Path
