@@ -88,7 +88,7 @@ def detect(save_img=False):
     if device.type != 'cpu':
         model(torch.zeros(1, 3, imgsz, imgsz).to(device).type_as(next(model.parameters())))  # run once
     t0 = time.time()
-    for path, img, im0s, vid_cap in dataset:
+    for img_num, (path, img, im0s, vid_cap) in enumerate(dataset):
         img = torch.from_numpy(img).to(device)
         img = img.half() if half else img.float()  # uint8 to fp16/32
         img /= 255.0  # 0 - 255 to 0.0 - 1.0
@@ -151,15 +151,23 @@ def detect(save_img=False):
                             label = f'{tid}, {int(tcls)}'
                         else:
                             label = f'{tid}, {names[int(tcls)]}'
-                        plot_one_box(tlbr, im0, label=label, color=colors[int(tid) % len(colors)], line_thickness=2)
-                        # 四角形内の画像を保存
-                        save_dir_name = "output_img"
-                        os.makedirs(save_dir_name, exist_ok=True)
-                        x = int(tlbr[0])
-                        y = int(tlbr[1])
-                        w = int(tlbr[2])
-                        h = int(tlbr[3])
-                        cv2.imwrite(f'{save_dir_name}/{label}.jpg', im0[y:y+h, x:x+w])
+
+                        if names[int(tcls)] not in ["traffic light", "train", "person"]:
+                            plot_one_box(tlbr, im0, label=label, color=colors[int(tid) % len(colors)], line_thickness=2)
+                        
+                            # 四角形内の画像を保存
+                            try:
+                                save_dir_name = "output_img"
+                                os.makedirs(save_dir_name, exist_ok=True)
+                                x = int(tlbr[0])
+                                y = int(tlbr[1])
+                                x2 = int(tlbr[2])
+                                y2 = int(tlbr[3])
+                                print(label)
+                                print(tlbr)
+                                cv2.imwrite(f'{save_dir_name}/img_{img_num}_{label}_{tlbr}.jpg', im0[y:y2, x:x2])
+                            except:
+                                pass
 
 
             p = Path(p)  # to Path
