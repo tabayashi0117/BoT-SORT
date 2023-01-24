@@ -215,7 +215,7 @@ def detect(save_img=False):
         # print(f"Results saved to {save_dir}{s}")
     
     # 物体の情報を保存
-    df_obj.to_csv("obj_info.csv")
+    df_obj.to_csv(f"obj_info_{os.path.splitext(os.path.basename(source))[0]}.csv")
 
     print(f'Done. ({time.time() - t0:.3f}s)')
 
