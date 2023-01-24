@@ -2,7 +2,7 @@ import argparse
 import time
 from pathlib import Path
 import os, sys
-import pandas
+import pandas as pd
 
 import cv2
 import torch
