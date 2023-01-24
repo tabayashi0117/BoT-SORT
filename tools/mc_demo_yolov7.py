@@ -158,23 +158,24 @@ def detect(save_img=False):
                         else:
                             label = f'{tid}, {names[int(tcls)]}'
 
-                        if names[int(tcls)] not in ["traffic light", "train", "person"]:
+                        if names[int(tcls)] not in ["traffic light", "train", "person", "x1", "x2", "y1", "y2", "x_center", "y_center"]:
                             plot_one_box(tlbr, im0, label=label, color=colors[int(tid) % len(colors)], line_thickness=2)
                         
                             # 四角形内の画像を保存
                             try:
                                 save_dir_name = "output_img"
                                 os.makedirs(save_dir_name, exist_ok=True)
-                                x = int(tlbr[0])
-                                y = int(tlbr[1])
+                                x1 = int(tlbr[0])
+                                y1 = int(tlbr[1])
                                 x2 = int(tlbr[2])
                                 y2 = int(tlbr[3])
                                 print(label)
                                 print(tlbr)
-                                cv2.imwrite(f'{save_dir_name}/img_{img_num}_object_{tid}_{names[int(tcls)]}.jpg', im0[y:y2, x:x2])
+                                cv2.imwrite(f'{save_dir_name}/img_{img_num}_object_{tid}_{names[int(tcls)]}.jpg', im0[y1:y2, x1:x2])
                                 
                                 # 物体の情報を保存
-                                df_obj = df_obj.append({'img_num': img_num, 'tracking_id': tid, 'obj_type': names[int(tcls)]}, ignore_index=True)
+                                df_obj = df_obj.append({'img_num': img_num, 'tracking_id': tid, 'obj_type': names[int(tcls)],
+                                                        'x1':x1, 'x2':x2, 'y1':y1, 'y2':y2, 'x_center':(x1+x2)/2, 'y_center':(y1+y2)/2, }, ignore_index=True)
                             except:
                                 pass
 
