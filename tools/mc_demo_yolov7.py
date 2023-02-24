@@ -137,6 +137,7 @@ def detect(save_img=False):
             online_scores = []
             online_cls = []
             for t in online_targets:
+                print()
                 tlwh = t.tlwh
                 tlbr = t.tlbr
                 tid = t.track_id
@@ -169,8 +170,8 @@ def detect(save_img=False):
                                 y1 = int(tlbr[1])
                                 x2 = int(tlbr[2])
                                 y2 = int(tlbr[3])
-                                print(label)
-                                print(tlbr)
+                                # print(label)
+                                # print(tlbr)
                                 cv2.imwrite(f'{save_dir_name}/img_{img_num}_object_{tid}_{names[int(tcls)]}.jpg', im0[y1:y2, x1:x2])
                                 
                                 # 物体の情報を保存
