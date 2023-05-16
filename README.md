@@ -92,6 +92,11 @@ pip3 install faiss-cpu
 pip3 install faiss-gpu
 ```
 
+Step 6. Jupyter
+```shell
+conda install jupyterlab
+```
+
 ## Data Preparation
 
 Download [MOT17](https://motchallenge.net/data/MOT17/) and [MOT20](https://motchallenge.net/data/MOT20/) from the [official website](https://motchallenge.net/). And put them in the following structure:
