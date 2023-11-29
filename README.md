@@ -61,7 +61,13 @@ The code was tested on Ubuntu 20.04
 BoT-SORT code is based on ByteTrack and FastReID. <br>
 Visit their installation guides for more setup options.
  
-### Setup with Anaconda
+### Setup with Anaconda (田林版)
+
+```shell
+conda env create -f botsort_env.yml
+```
+ 
+### Setup with Anaconda (original)
 **Step 1.** Create Conda environment and install pytorch.
 ```shell
 conda create -n botsort_env python=3.7
